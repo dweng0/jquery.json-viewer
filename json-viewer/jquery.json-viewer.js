@@ -51,7 +51,11 @@
           html += '<li>';
           /* Add toggle button if item is collapsable */
           if (isCollapsable(json[i])) {
-            html += '<a href class="json-toggle"></a>';
+            html += '<a href class="json-key json-toggle"></a>';
+          }          
+          else
+          {
+            html += '<a href class="json-key"></a>'
           }
           html += json2html(json[i], options);
           /* Add comma if item is not last */
@@ -77,10 +81,10 @@
               '<span class="json-string">"' + key + '"</span>' : key;
             /* Add toggle button if item is collapsable */
             if (isCollapsable(json[key])) {
-              html += '<a href class="json-toggle">' + keyRepr + '</a>';
+              html += '<a href class="json-toggle"></a>'+ '<a href class="json-key">' + keyRepr+ '</a>';;
             }
             else {
-              html += keyRepr;
+              html += '<a href class="json-key">' + keyRepr+ '</a>';
             }
             html += ': ' + json2html(json[key], options);
             /* Add comma if item is not last */
@@ -108,7 +112,6 @@
 
     /* jQuery chaining */
     return this.each(function() {
-
       /* Transform to HTML */
       var html = json2html(json, options);
       if (isCollapsable(json))
@@ -119,13 +122,25 @@
 
       /* Bind click on toggle buttons */
       $(this).off('click');
-      $(this).on('click', 'a.json-toggle', function() {
+      $(this).on('click', 'a.json-key', function(event){
+        if(options.onKeyClicked)
+        {
+          options.onKeyClicked(this, event);
+        }
+        return false;
+      });
+      $(this).on('click', 'a.json-toggle', function(event) {
+        if(options.onKeyClicked)
+        {
+          options.onKeyClicked(this, event);
+        }
         var target = $(this).toggleClass('collapsed').siblings('ul.json-dict, ol.json-array');
         target.toggle();
         if (target.is(':visible')) {
           target.siblings('.json-placeholder').remove();
         }
         else {
+        
           var count = target.children('li').length;
           var placeholder = count + (count > 1 ? ' items' : ' item');
           target.after('<a href class="json-placeholder">' + placeholder + '</a>');
