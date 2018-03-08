@@ -39,6 +39,10 @@ $(function() {
       onKeyClicked: function(element, event){
         console.log('user selected', element.text);
         $('#selection').val(element.text);
+        if($(element).data('notation'))
+        {
+          $('#notationselection').val($(element).data('notation'));
+        }        
       }
     };
     $('#json-renderer').jsonViewer(input, options);
@@ -60,7 +64,14 @@ $(function() {
   "price": 2.55,
   "available": {
     store: 42,
-    warehouse: 600
+    warehouse: 600,
+    amazing: {
+      amy: true,
+      why: false,
+      how: {
+        manyReasons: "yeah"
+      }
+    }
   },
   "topping": [
     { "id": 5001, "type": "None" },
@@ -76,8 +87,12 @@ $(function() {
       <label><input type="checkbox" id="with-quotes" />Keys with quotes</label>
     </p>
     <button id="btn-json-viewer" title="run jsonViewer()">Transform to HTML</button>
-    <pre id="json-renderer"></pre>
+
     <h2>Selections</h2>
     <input type="text" id="selection"/>
+    <h3>parent notations:</h3>
+    <input type="text" id="notationselection"/>
+    <pre id="json-renderer"></pre>
+     
   </body>
 </html>

@@ -27,7 +27,7 @@
    */
   function json2html(json, options) {
     var html = '';
-    if (typeof json === 'string') {
+      if (typeof json === 'string') {
       /* Escape tags */
       json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       if (isUrl(json))
@@ -81,12 +81,14 @@
               '<span class="json-string">"' + key + '"</span>' : key;
             /* Add toggle button if item is collapsable */
             if (isCollapsable(json[key])) {
-              html += '<a href class="json-toggle"></a>'+ '<a href class="json-key">' + keyRepr+ '</a>';;
+              html += '<a href class="json-toggle"></a>'+ '<a href class="json-key" data-notation="'+ options.parent +'">' + keyRepr+ '</a>';
+              
             }
             else {
-              html += '<a href class="json-key">' + keyRepr+ '</a>';
+              html += '<a href class="json-key" data-notation="'+ options.parent +'">' + keyRepr+ '</a>';
             }
-            html += ': ' + json2html(json[key], options);
+            var notations = options.parent ? options.parent + '.' + keyRepr : keyRepr;
+            html += ': ' + json2html(json[key], {parent:notations, withQuotes: options.withQuotes});
             /* Add comma if item is not last */
             if (--key_count > 0)
               html += ',';
@@ -109,7 +111,6 @@
    */
   $.fn.jsonViewer = function(json, options) {
     options = options || {};
-
     /* jQuery chaining */
     return this.each(function() {
       /* Transform to HTML */
